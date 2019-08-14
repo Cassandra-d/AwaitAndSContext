@@ -19,7 +19,11 @@ namespace WebApplication1.Controllers
         public async Task<IHttpActionResult> Index()
         {
             Log();
+            // thread A
+            // sc saved
             await Magic();
+            // thread B
+            // sc restored
             Log();
 
             return Ok();
@@ -28,14 +32,20 @@ namespace WebApplication1.Controllers
         async Task Magic()
         {
             Log();
+            // thread A
+            // sc as before
             await DarkMagic().ConfigureAwait(false);
+            // thread B
+            // sc is null
             Log();
         }
 
         async Task DarkMagic()
         {
             Log();
+            // thread A
             await (new StreamWriter(Path.GetTempFileName()).WriteAsync(Enumerable.Repeat('a', 5000000).ToArray()));
+            // thread B
             Log();
         }
 
